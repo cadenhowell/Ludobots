@@ -2,3 +2,6 @@ env
 *.mov
 .DS_Store
 __pycache__
+.vscode
+data
+results
