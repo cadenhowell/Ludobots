@@ -13,3 +13,16 @@ plt.plot(backLegSensorValues, label='Back Leg', linewidth=3.0)
 plt.plot(frontLegSensorValues, label='Front Leg')
 plt.legend()
 plt.show()
+
+targetAnglesBackLeg = None
+with open('data/targetAnglesBackLeg.npy', 'rb') as f:
+    targetAnglesBackLeg = numpy.load(f)
+
+targetAnglesFrontLeg = None
+with open('data/targetAnglesFrontLeg.npy', 'rb') as f:
+    targetAnglesFrontLeg = numpy.load(f)
+
+plt.plot(targetAnglesBackLeg, label='Back Leg')
+plt.plot(targetAnglesFrontLeg, label='Front Leg')
+plt.legend()
+plt.show()
