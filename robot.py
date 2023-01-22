@@ -28,7 +28,6 @@ class ROBOT:
         self.motors = {}
         for jointName in pyrosim.jointNamesToIndices:
             if jointName == b'Torso_BackLeg':
-                print(jointName)
                 self.motors[jointName] = MOTOR(jointName, c.amplitudeBackLeg, c.frequencyBackLeg, c.phaseOffsetBackLeg)
             else:
                 self.motors[jointName] = MOTOR(jointName, c.amplitudeBackLeg, 0.5 * c.frequencyBackLeg, c.phaseOffsetBackLeg)
@@ -42,4 +41,3 @@ class ROBOT:
 
     def Think(self):
         self.nn.Update()
-        self.nn.Print()
