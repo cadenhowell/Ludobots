@@ -5,12 +5,8 @@ import pyrosim.pyrosim as pyrosim
 
 
 class MOTOR:
-    def __init__(self, jointName, amplitude, frequency, phaseOffset):
+    def __init__(self, jointName):
         self.jointName = jointName
-        self.amplitude = amplitude
-        self.frequency = frequency
-        self.phaseOffset = phaseOffset
-        self.motorValues = self.amplitude * numpy.sin(self.frequency * numpy.linspace(0, 2 * numpy.pi, 1000) + self.phaseOffset)
 
     def Set_Value(self, robotId, desiredAngle):
         pyrosim.Set_Motor_For_Joint(
