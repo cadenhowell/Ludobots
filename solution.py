@@ -31,7 +31,6 @@ class SOLUTION:
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
-        pyrosim.Send_Cube(name="Box", pos=[-2, 2, 0.5] , size=[1, 1, 1])
         pyrosim.End()
 
     def Create_Body(self):
@@ -75,6 +74,7 @@ class SOLUTION:
         pyrosim.Send_Motor_Neuron(name = 9 , jointName = "FrontLeg_FrontLowerLeg")
         pyrosim.Send_Motor_Neuron(name = 10 , jointName = "LeftLeg_LeftLowerLeg")
         pyrosim.Send_Motor_Neuron(name = 11 , jointName = "RightLeg_RightLowerLeg")
+        
         for currentRow in range(c.numSensorNeurons):
             for currentColumn in range(c.numMotorNeurons):
                 pyrosim.Send_Synapse(sourceNeuronName = currentRow , targetNeuronName = currentColumn + c.numSensorNeurons, weight = self.weights[currentRow][currentColumn])
