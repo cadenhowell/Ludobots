@@ -20,13 +20,13 @@ class SIMULATION:
 		self.robot = ROBOT(solutionID)
 
 	def Run(self):
-		for i in range(5000):
+		for i in range(4000):
 			if self.directOrGUI == "GUI":
 				time.sleep(1/10000)
 			p.stepSimulation()
 			self.robot.Sense(i)
 			self.robot.Think()
-			self.robot.Act(i)
+			self.robot.Act()
 
 	def Get_Fitness(self):
 		self.robot.Get_Fitness()

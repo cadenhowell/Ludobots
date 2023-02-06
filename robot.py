@@ -1,5 +1,5 @@
 import os
-
+import math 
 import pybullet as p
 
 import constants as c
@@ -33,21 +33,29 @@ class ROBOT:
         for jointName in pyrosim.jointNamesToIndices:
             self.motors[jointName] = MOTOR(jointName)
 
-    def Act(self, i):
+    def Act(self):
         for neuronName in self.nn.Get_Neuron_Names():
             if self.nn.Is_Motor_Neuron(neuronName):
                 jointName = self.nn.Get_Motor_Neurons_Joint(neuronName).encode('utf-8')
-                desiredAngle = c.motorJointRange * self.nn.Get_Value_Of(neuronName)
+                if neuronName == '5':
+                    desiredAngle = self.nn.Get_Value_Of(neuronName)
+                else:
+                    desiredAngle = c.motorJointRange * self.nn.Get_Value_Of(neuronName)
                 self.motors[jointName].Set_Value(self.robotId, desiredAngle)
+                if neuronName == '3':
+                    self.motors[b'Torso_BR'].Set_Value(self.robotId, desiredAngle)
+                if neuronName == '4':
+                    self.motors[b'Torso_FR'].Set_Value(self.robotId, desiredAngle)
 
     def Think(self):
         self.nn.Update()
 
     def Get_Fitness(self):
-        stateOfLinkZero = p.getLinkState(self.robotId, 0)
-        positionOfLinkZero = stateOfLinkZero[0]
-        xCoordinateOfLinkZero = positionOfLinkZero[0]
+        basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
+        basePosition = basePositionAndOrientation[0]
+        yPosition = basePosition[1]
+        zPosition = basePosition[2]
         with open(f"tmp{self.solutionID}.txt", "w") as f:
-            f.write(str(xCoordinateOfLinkZero))
+            f.write(str(yPosition * 0.1 + zPosition * 0.9))
         os.system(f'mv tmp{self.solutionID}.txt fitness{self.solutionID}.txt')
         
