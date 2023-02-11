@@ -4,20 +4,22 @@ import time
 
 import numpy
 
-import constants as c
 import pyrosim.pyrosim as pyrosim
 
 
 class SOLUTION:
-    def __init__(self, nextAvailableID):
+    def __init__(self, nextAvailableID, parentSeed=None):
         self.myID = nextAvailableID
-        self.weights = 2 * numpy.random.rand(c.numSensorNeurons, c.numMotorNeurons) - 1
+        self.numSegments = random.randint(2, 5)
+        self.numSensors = random.randint(1, self.numSegments)
+        self.weights = 2 * numpy.random.rand(self.numSensors, self.numSegments - 1) - 1
+        self.parentSeed = time.time() if parentSeed is None else parentSeed
 
     def Start_Simulation(self, directOrGUI):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
-        os.system(f"python3 simulate.py {directOrGUI} {self.myID} 2&>1 &")
+        os.system(f"python3 simulate.py 'GUI' {self.myID} 2&>1 &")
 
     def Wait_For_Simulation_To_End(self):
         while not os.path.exists(f"fitness{self.myID}.txt"):
@@ -31,57 +33,125 @@ class SOLUTION:
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
-        sx, sy = 4, 1
-        px, py = sx, sx
-        dx, dy = 0, 1.5
-        z, dz = 0.1, 0.1
-        for j in range(8):
-            pyrosim.Send_Cube(name=f"stair_{j}", pos=(dx, dy + sy / 2, z / 2), size=(sx, sy, z))
-            z += dz
-            dy += sy
-        pyrosim.Send_Cube(name=f"platform_1", pos=(dx, dy + py / 2, z / 2), size=(px, py, z))
         pyrosim.End()
 
+
+    def random_features(self, min_length, max_length, max_height, rotation_types):
+        shape = random.choice(["cube", "cylinder", "sphere"])
+
+        length = random.random() * (max_length - min_length) + min_length
+
+        rpy = '0 0 0'
+        if shape == 'cylinder':
+            rpy = random.choice(list(rotation_types.values()))
+
+        limit_length_cases = [
+            shape == 'cylinder' and rpy == rotation_types["roll"],
+            shape == 'sphere'
+        ]
+        if any(limit_length_cases):
+            length = random.random() * (max_height - min_length) + min_length
+
+        return shape, length, rpy
+
+
     def Create_Body(self):
-        pyrosim.Start_URDF("body.urdf")
+        pyrosim.Start_URDF(f"body{self.myID}.urdf")
 
-        pyrosim.Send_Cube(name="Torso", pos=[0, 0, 1] , size=[1, 2, 0.5])
+        random.seed(self.parentSeed)
+
+        width, height = 1, 1
+        min_length, max_length = 0.5, 2
         
-        pyrosim.Send_Joint(name = "Torso_BL" , parent= "Torso" , child = "BL" , type = "revolute", position = [-0.5, -0.9, 1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="BL", pos=[-0.1, 0, -0.5] , size=[0.2, 0.2, 1])
+        rotation_types = {
+            'none': '0 0 0',
+            'roll': f'{str(numpy.pi / 2)} 0 0',
+            'pitch': f'0 {str(numpy.pi / 2)} 0'
+        }
 
-        pyrosim.Send_Joint(name = "Torso_BR" , parent= "Torso" , child = "BR" , type = "revolute", position = [0.5, -0.9, 1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="BR", pos=[0.1, 0, -0.5] , size=[0.2, 0.2, 1])
+        self.sensors = list(map(str, random.sample(range(self.numSegments), self.numSensors)))
+        self.joints = [f'{i}_{i+1}' for i in range(self.numSegments - 1)]
 
-        pyrosim.Send_Joint(name = "Torso_FL" , parent= "Torso" , child = "FL" , type = "revolute", position = [-0.5, 0.9, 1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="FL", pos=[-0.1, 0, -0.5] , size=[0.2, 0.2, 1])
+        def create_cube(name, length, isSensor, isRoot):
+            pos = [-1 * length / 2, 0, 0]
+            size = [length, width, height]
 
-        pyrosim.Send_Joint(name = "Torso_FR" , parent= "Torso" , child = "FR" , type = "revolute", position = [0.5, 0.9, 1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="FR", pos=[0.1, 0, -0.5] , size=[0.2, 0.2, 1])
+            if isRoot:
+                pos[2] = height / 2
+                
+            pyrosim.Send_Cube(name=name, pos=pos, size=size, isSensor=isSensor)
 
-        pyrosim.Send_Joint(name = "Torso_BW" , parent= "Torso" , child = "BW" , type = "revolute", position = [0, -1, 1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="BW", pos=[0, -0.65, 0] , size=[0.1, 1.3, 0.1])
+        def create_cylinder(name, length, rpy, isSensor, isRoot):
+            pos = [-1 * length / 2, 0, 0]
+            size = [0, 0, 0]
+            
+            if rpy == rotation_types["none"]:
+                size = [height, length / 2]
+
+                if isRoot:
+                    pos[2] = height / 2
+
+            elif rpy == rotation_types["roll"]:
+                size = [width, length / 2]
+
+                if isRoot:
+                    pos[2] = length / 2
+
+            elif rpy == rotation_types["pitch"]:
+                size = [length, height / 2]
+
+                if isRoot:
+                    pos[2] = height / 2
+
+            pyrosim.Send_Cylinder(name=name, pos=pos, size=size, rpy=rpy, isSensor=isSensor)
+
+        def create_sphere(name, length, isSensor, isRoot):
+            pos = [-1 * length / 2, 0, 0]
+            size = [length / 2]
+
+            if isRoot:
+                pos[2] = length / 2
+
+            pyrosim.Send_Sphere(name=name, pos=pos, size=size, isSensor=isSensor)
+
+        def create_joint(i, length, isRoot):
+            position = [-1 * length, 0, 0]
+
+            if isRoot:
+                position[2] = height / 2
+
+            pyrosim.Send_Joint(name=f'{i}_{i+1}', parent=str(i), child = str(i+1), type="revolute", position=position, jointAxis = "0 1 0")
+
+        for i in range(self.numSegments):
+            shape, length, rpy = self.random_features(min_length, max_length, height, rotation_types)
+
+            name = str(i)
+            if shape == 'cube':
+                create_cube(name, length, name in self.sensors, i == 0)
+            elif shape == 'cylinder':
+                create_cylinder(name, length, rpy, name in self.sensors, i == 0)
+            elif shape == 'sphere':
+                create_sphere(name, length, name in self.sensors, i == 0)
+            
+            if self.numSegments > 1 and i < self.numSegments - 1:
+                create_joint(i, length, i == 0)  
 
         pyrosim.End()
 
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
-        pyrosim.Send_Sensor_Neuron(name = 0 , linkName = "BL")
-        pyrosim.Send_Sensor_Neuron(name = 1 , linkName = "FL")
-        pyrosim.Send_Sensor_Neuron(name = 2 , linkName = "BW")
-
-        pyrosim.Send_Motor_Neuron(name = 3 , jointName = "Torso_BL")
-        pyrosim.Send_Motor_Neuron(name = 4 , jointName = "Torso_FL")
-        pyrosim.Send_Motor_Neuron(name = 5 , jointName = "Torso_BW")
-
+        for i, sensor in enumerate(self.sensors):
+            pyrosim.Send_Sensor_Neuron(name = i, linkName = sensor)
+        for i, joint in enumerate(self.joints):
+            pyrosim.Send_Motor_Neuron(name = i + len(self.sensors), jointName = joint)
         
-        for currentRow in range(c.numSensorNeurons):
-            for currentColumn in range(c.numMotorNeurons):
-                pyrosim.Send_Synapse(sourceNeuronName = currentRow , targetNeuronName = currentColumn + c.numSensorNeurons, weight = self.weights[currentRow][currentColumn])
+        for i, sensor in enumerate(self.sensors):
+            for j, joint in enumerate(self.joints):
+                pyrosim.Send_Synapse(sourceNeuronName = i , targetNeuronName = j + self.numSensors, weight = self.weights[i][j])
         pyrosim.End()
-        pass
 
     def Mutate(self):
-        randomRow = random.randint(0, c.numSensorNeurons - 1)
-        randomColumn = random.randint(0, c.numMotorNeurons - 1)
+        random.seed()
+        randomRow = random.randint(0, len(self.sensors) - 1)
+        randomColumn = random.randint(0, len(self.joints) - 1)
         self.weights[randomRow][randomColumn] = 2 * random.random() - 1

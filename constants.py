@@ -1,7 +1,4 @@
-numberOfGenerations = 10
-populationSize = 10
+numberOfGenerations = 1
+populationSize = 6
 
-numSensorNeurons = 3
-numMotorNeurons = 3
-
-motorJointRange = 0.9
+motorJointRange = 1

@@ -2,15 +2,25 @@ from pyrosim.commonFunctions import Save_Whitespace
 
 class MATERIAL: 
 
-    def __init__(self):
+    def __init__(self, isSensor):
 
         self.depth  = 3
 
-        self.string1 = '<material name="Cyan">'
+        if isSensor:
 
-        self.string2 = '    <color rgba="0 1.0 1.0 1.0"/>'
+            self.string1 = '<material name="Green">'
 
-        self.string3 = '</material>'
+            self.string2 = '    <color rgba="0.0 1.0 0.0 1.0"/>'
+
+            self.string3 = '</material>'
+        
+        else:
+
+            self.string1 = '<material name="Blue">'
+
+            self.string2 = '    <color rgba="0.0 0.0 1.0 1.0"/>'
+
+            self.string3 = '</material>'
 
     def Save(self,f):
 
