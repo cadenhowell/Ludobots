@@ -1,4 +1,4 @@
 numberOfGenerations = 1
-populationSize = 6
+populationSize = 5
 
 motorJointRange = 1
