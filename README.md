@@ -20,8 +20,8 @@ To generate a 3D morphology, I recursively branched out constituent boxes with v
     * After experimentation with other joint types and axis alignments, it was found they frequently caused odd behavior and collisions. Thus I chose to stick with revolute joints.
 * A box is sensor with p=0.5.
 * Joints are always placed in the center of a face
+[diagram.pdf](https://github.com/cadenhowell/Ludobots/files/10788596/diagram.pdf)
 
-![Diagram](https://github.com/cadenhowell/Ludobots/blob/3DMorph/diagram.pdf)
 ## Motor
 The motor power is set to 15 to reduce unrealistic behavior.
 Joint motor range is multiplied by a desired motor range of 1, leaving it unaffected (for now).
