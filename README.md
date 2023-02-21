@@ -21,7 +21,7 @@ To generate a 3D morphology, I recursively branched out constituent boxes with v
 * A box is sensor with p=0.5.
 * Joints are always placed in the center of a face
 
-![Diagram](diagram.pdf)
+![Diagram](https://github.com/cadenhowell/Ludobots/blob/3DMorph/diagram.pdf)
 ## Motor
 The motor power is set to 15 to reduce unrealistic behavior.
 Joint motor range is multiplied by a desired motor range of 1, leaving it unaffected (for now).
