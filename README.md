@@ -22,7 +22,9 @@ To generate a 3D morphology, I recursively branched out constituent boxes with v
 * Joints are always placed in the center of a face
 
 
-[diagram.pdf](https://github.com/cadenhowell/Ludobots/files/10788596/diagram.pdf)
+[Click to Download Diagram](https://github.com/cadenhowell/Ludobots/files/10788596/diagram.pdf)
+
+[Click to View Diagram in Browser](diagram.pdf)
 
 ## Motor
 The motor power is set to 15 to reduce unrealistic behavior.
