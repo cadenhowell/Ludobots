@@ -51,7 +51,7 @@ class SOLUTION:
                 size[i] = random.random() * (new_max_length - min_length) + min_length
 
         joint_axis = [0, 0, 0]
-        joint_axis[direction] = 0.8
+        joint_axis[direction] = 1
         joint_axis = ' '.join(map(str, joint_axis))
 
         return size, is_sensor, joint_axis
