@@ -5,7 +5,7 @@ import pickle
 import constants as c
 from solution import SOLUTION
 
-
+import math
 class PARALLEL_HILL_CLIMBER:
 	def __init__(self):
 		os.system('rm brain*.nndf')
@@ -22,17 +22,19 @@ class PARALLEL_HILL_CLIMBER:
 	def Evolve(self):
 		self.Evaluate(self.parents)
 		for currentGeneration in range(c.numberOfGenerations):
-			self.Evolve_For_One_Generation()
+			self.Evolve_For_One_Generation(currentGeneration)
 				
-	def Evolve_For_One_Generation(self):
+	def Evolve_For_One_Generation(self, currentGeneration):
 		self.Spawn()
 		self.Mutate()
 		self.Evaluate(self.children)
-		self.Print()
+		self.Print(currentGeneration)
 		self.Select()
 
-	def Print(self):
+	def Print(self, currentGeneration):
+		
 		print()
+		print(f'Generation: {currentGeneration}')
 		for parentID in self.parents:
 			print(self.parents[parentID].fitness, self.children[parentID].fitness)
 		print()
@@ -49,13 +51,18 @@ class PARALLEL_HILL_CLIMBER:
 			child.Mutate()
 
 	def Select(self):
-		min_fitness = float('inf')
+		min_fitness = math.inf
 		for parentID in self.parents:
 			if self.children[parentID].fitness < self.parents[parentID].fitness:
 				self.parents[parentID] = self.children[parentID]
 
 			if self.parents[parentID].fitness < min_fitness:
 				min_fitness = self.parents[parentID].fitness
+
+			if self.parents[parentID].fitness == math.inf:
+				self.parents[parentID] = SOLUTION(self.nextAvailableID)
+				self.nextAvailableID += 1
+
 		
 		with open('best_fitness.csv', 'a') as f:
 			f.write(f'{str(min_fitness)}, ')

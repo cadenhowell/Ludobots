@@ -11,7 +11,7 @@ class SOLUTION:
     def __init__(self, nextAvailableID, seed=None):
         self.myID = nextAvailableID
         self.morphology = Morphology(seed)
-
+        self.fitness = math.inf
 
     def Start_Simulation(self, directOrGUI, save=False):
         self.Create_World()
@@ -25,8 +25,6 @@ class SOLUTION:
             time.sleep(0.01)
         with open(f"fitness{self.myID}.txt", "r") as fitnessFile:
             self.fitness = float(fitnessFile.read())
-            if self.fitness == math.inf:
-                self.morphology = Morphology()
 
         os.system(f"rm fitness{self.myID}.txt")
 
