@@ -1,4 +1,4 @@
 numberOfGenerations = 100
-populationSize = 10
+populationSize = 5
 
-motorJointRange = 0.4
+motorJointRange = 0.7

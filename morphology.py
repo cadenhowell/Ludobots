@@ -1,5 +1,5 @@
 import random
-
+import string
 import numpy as np
 
 
@@ -30,6 +30,7 @@ class Morphology:
         self.joints = []
         self.links = []
         self.sensors = []
+        self.root = ''
 
         self.min_side_len = side_len_range[0]
         self.max_side_len = side_len_range[1]
@@ -57,21 +58,19 @@ class Morphology:
         pos = [0, 0, 0]
         pos[direction] = size[direction] / 2
 
-        if name == '0':
+        if name == self.root:
             pos[2] = size[2] / 2
         return pos
 
     def create_joint(self, parent_name, child_name, size, old_direction, new_direction, jointAxis):
-        pos = self.get_joint_pos(
-            parent_name, size, old_direction, new_direction)
+        pos = self.get_joint_pos(parent_name, size, old_direction, new_direction)
 
-        self.joints.append(Joint(f'{parent_name}_{child_name}', str(parent_name), str(
-            child_name), "revolute", pos, jointAxis, old_direction, new_direction))
+        self.joints.append(Joint(f'{parent_name}_{child_name}', parent_name, child_name, "revolute", pos, jointAxis, old_direction, new_direction))
 
     def get_joint_pos(self, parent_name, size, old_direction, new_direction):
         pos = [0, 0, 0]
 
-        if self.links[0].name == parent_name and old_direction != 2:
+        if self.root == parent_name and old_direction != 2:
             pos[2] = size[2] / 2
 
         pos[old_direction] += size[old_direction] / 2
@@ -80,7 +79,9 @@ class Morphology:
         return pos
 
     def build_morphology(self):
-        queue = [(random.choice([0, 1, 2]), '0')]
+        dir = random.choice([0, 1, 2])
+        self.root = ''.join(random.choices(string.ascii_lowercase, k=32))
+        queue = [(dir, self.root)]
         self.build_node(queue)
 
     def build_node(self, queue):
@@ -101,7 +102,7 @@ class Morphology:
 
             for new_direction in features['newDirections']:
                 if len(self.joints) < self.initial_num_segments - 1:
-                    child_name = str(len(self.joints) + 1)
+                    child_name = ''.join(random.choices(string.ascii_lowercase, k=32))
 
                     self.create_joint(
                         parent_name=name,
@@ -206,24 +207,18 @@ class Morphology:
         desired_new_direction = random.choice([0, 1, 2])
 
         random_joint.new_direction = desired_new_direction
-        parent_link = next(
-            link for link in self.links if link.name == random_joint.parent)
-        random_joint.pos = self.get_joint_pos(
-            random_joint.parent, parent_link.size, random_joint.old_direction, random_joint.new_direction)
+        parent_link = next(link for link in self.links if link.name == random_joint.parent)
+        random_joint.pos = self.get_joint_pos(random_joint.parent, parent_link.size, random_joint.old_direction, random_joint.new_direction)
 
-        child_link = next(
-            link for link in self.links if link.name == random_joint.child)
+        child_link = next(link for link in self.links if link.name == random_joint.child)
         child_link.direction = desired_new_direction
         child_link.size[cur_new_direction], child_link.size[desired_new_direction] = child_link.size[desired_new_direction], child_link.size[cur_new_direction]
-        child_link.pos = self.get_cube_pos(
-            child_link.name, child_link.size, child_link.direction)
+        child_link.pos = self.get_cube_pos(child_link.name, child_link.size, child_link.direction)
 
-        next_joints = [
-            joint for joint in self.joints if joint.parent == child_link.name]
+        next_joints = [joint for joint in self.joints if joint.parent == child_link.name]
         for next_joint in next_joints:
             next_joint.old_direction = desired_new_direction
-            next_joint.pos = self.get_joint_pos(
-                next_joint.parent, child_link.size, next_joint.old_direction, next_joint.new_direction)
+            next_joint.pos = self.get_joint_pos(next_joint.parent, child_link.size, next_joint.old_direction, next_joint.new_direction)
 
     def change_type(self, random_joint):
         random_joint.type = random.choice(['revolute', 'fixed'])
@@ -233,18 +228,15 @@ class Morphology:
         is_large_dim = random_link.direction == random_dim or random.random() < 0.1
         random_link.size[random_dim] = self.random_side_len(is_large_dim)
 
-        random_link.pos = self.get_cube_pos(
-            random_link.name, random_link.size, random_link.direction)
+        random_link.pos = self.get_cube_pos(random_link.name, random_link.size, random_link.direction)
 
-        joints_to_update = [
-            joint for joint in self.joints if joint.parent == random_link.name]
+        joints_to_update = [joint for joint in self.joints if joint.parent == random_link.name]
 
         for joint in joints_to_update:
-            joint.pos = self.get_joint_pos(
-                joint.parent, random_link.size, joint.old_direction, joint.new_direction)
+            joint.pos = self.get_joint_pos(joint.parent, random_link.size, joint.old_direction, joint.new_direction)
 
     def add_link(self, random_leaf_link):
-        new_name = str(len(self.joints) + 1)
+        new_name = ''.join(random.choices(string.ascii_lowercase, k=32))
 
         new_direction = random.randint(0, 2)
         
@@ -274,8 +266,7 @@ class Morphology:
 
     def delete_link(self, random_leaf_link):
         self.links.remove(random_leaf_link)
-        self.joints = [
-            joint for joint in self.joints if joint.child != random_leaf_link.name]
+        self.joints = [joint for joint in self.joints if joint.child != random_leaf_link.name]
 
         if random_leaf_link.isSensor:
             self.weights = np.delete(self.weights, self.sensors.index(random_leaf_link.name), axis=0)
