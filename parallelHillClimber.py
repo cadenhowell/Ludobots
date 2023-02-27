@@ -1,5 +1,6 @@
 import copy
 import os
+import pickle
 
 import constants as c
 from solution import SOLUTION
@@ -9,6 +10,7 @@ class PARALLEL_HILL_CLIMBER:
 	def __init__(self):
 		os.system('rm brain*.nndf')
 		os.system('rm fitness*.txt')
+		os.system('rm best_fitness.csv')
 		os.system('rm body*.txt')
 		self.parents = {}
 		self.nextAvailableID = 0
@@ -47,19 +49,26 @@ class PARALLEL_HILL_CLIMBER:
 			child.Mutate()
 
 	def Select(self):
+		min_fitness = float('inf')
 		for parentID in self.parents:
 			if self.children[parentID].fitness < self.parents[parentID].fitness:
 				self.parents[parentID] = self.children[parentID]
+
+			if self.parents[parentID].fitness < min_fitness:
+				min_fitness = self.parents[parentID].fitness
+		
+		with open('best_fitness.csv', 'a') as f:
+			f.write(f'{str(min_fitness)}, ')
 
 	def Show_Best(self):
 		bestParent = None
 		for parent in self.parents.values():
 			if bestParent is None or parent.fitness < bestParent.fitness:
 				bestParent = parent
-		bestParent.Start_Simulation('GUI')
+		bestParent.Start_Simulation('GUI', save=True)
 
 	def Evaluate(self, solutions):
 		for solution in solutions.values():
-			solution.Start_Simulation('DIRECT')
+			solution.Start_Simulation('DIRECT', save=False)
 		for solution in solutions.values():
 			solution.Wait_For_Simulation_To_End()
