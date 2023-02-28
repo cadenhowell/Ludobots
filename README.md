@@ -22,9 +22,7 @@ To generate a 3D morphology, I recursively branched out constituent boxes with v
 * A box is a sensor with p=0.5.
 * Joints are always placed in the center of a face
 
-[Click to Download Diagram](https://github.com/cadenhowell/Ludobots/files/10788596/diagram.pdf)
-
-[Click to View Diagram in Browser](diagram.pdf)
+![Recursive Methodology](diagram.png)
 
 ## Evolution
 One mutation happens on every generation. The following are possible mutations which can occur and their corresponding probabilities:
@@ -42,9 +40,10 @@ One mutation happens on every generation. The following are possible mutations w
         * Add (p=1/3): Add a link to a terminal link
     * Mutate Sensor (p=1/3): Swap the isSensor trait of two links if they are different.
 
-[Click to Download Diagram](https://github.com/cadenhowell/Ludobots/files/10788596/diagram.pdf)
+![Mutation Diagram](mutation.png)
 
-[Click to View Diagram in Browser](mutation.pdf)
+### Sample Fitness Curve
+![Sample Fitness Curve](results/evolving_3D_morph.png)
 
 ## Ignoring Broken Morphologies
 Some morphologies would spawn into the floor causing the fitness to be NaN. Whenever this occurs, a new morphology is generated to take the old ones place. If a child is the one which is broken, that morphology simply doesn't replace the parent. The child is assigned infinite fitness.
@@ -61,6 +60,7 @@ Minimize the position in the x direction. In the plot's the abs value of the x p
 
 ## Morphospace
 The morphospace is a 3D collection of boxes which branch out in perpendicular directions. Since the revolute joints can modify these angles, the various branches can span a wider range of angles (more so than just the orthogonal directions). The brain connects every sensor to every joint, meaning that any sensor node can affect the movement of any joint. This allows for a wide range of behaviors. It seemed a common design pattern was minimizing the number of links. The morphologies which did remain large were usually chaotic and launched themselves in some way. Though, these were also the ones that "worked" the best, mostly by beating the simulation. In general, the small solutions were more realistic, and would likely perform better in a real world scenario.
+
 ## Running
 Download ./main.sh and run it with execute privileges (chmod +x). This script will download Ludobots and all the requirements, then run search.py. Note that you need python3 and git to run this.
 
