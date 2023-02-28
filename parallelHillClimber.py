@@ -21,6 +21,17 @@ class PARALLEL_HILL_CLIMBER:
 
 	def Evolve(self):
 		self.Evaluate(self.parents)
+
+		bad_solutions = [key for key, solution in self.parents.items() if solution.fitness == math.inf]
+		while bad_solutions:
+			
+			for key in bad_solutions:
+				self.parents[key] = SOLUTION(self.nextAvailableID)
+				self.nextAvailableID += 1
+			
+			self.Evaluate(self.parents)
+			bad_solutions = [key for key, solution in self.parents.items() if solution.fitness == math.inf]
+			
 		for currentGeneration in range(c.numberOfGenerations):
 			self.Evolve_For_One_Generation(currentGeneration)
 				
@@ -58,11 +69,6 @@ class PARALLEL_HILL_CLIMBER:
 
 			if self.parents[parentID].fitness < min_fitness:
 				min_fitness = self.parents[parentID].fitness
-
-			if self.parents[parentID].fitness == math.inf:
-				self.parents[parentID] = SOLUTION(self.nextAvailableID)
-				self.nextAvailableID += 1
-
 		
 		with open('best_fitness.csv', 'a') as f:
 			f.write(f'{str(min_fitness)}, ')
