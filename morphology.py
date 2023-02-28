@@ -26,7 +26,7 @@ class Cube:
 
 class Morphology:
 
-    def __init__(self, seed=None, side_len_range=(0.2, 2.2), num_links_range=(3, 10)):
+    def __init__(self, seed=None, side_len_range=(0.2, 2.2), num_links_range=(3, 8)):
         self.joints = []
         self.links = []
         self.sensors = []
@@ -44,8 +44,7 @@ class Morphology:
 
         self.build_morphology()
 
-        self.weights = 2 * \
-            np.random.rand(len(self.sensors), len(self.joints)) - 1
+        self.weights = 2 * np.random.rand(len(self.sensors), len(self.joints)) - 1
 
     def create_cube(self, name, size, direction, isSensor):
         pos = self.get_cube_pos(name, size, direction)
