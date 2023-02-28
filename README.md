@@ -43,7 +43,7 @@ One mutation happens on every generation. The following are possible mutations w
 ![Mutation Diagram](mutation.png)
 
 ### Sample Fitness Curve
-![Sample Fitness Curve](results/evolving_3D_morph.png)
+![Sample Fitness Curve](evolving_3D_morph.png)
 
 ## Ignoring Broken Morphologies
 Some morphologies would spawn into the floor causing the fitness to be NaN. Whenever this occurs, a new morphology is generated to take the old ones place. If a child is the one which is broken, that morphology simply doesn't replace the parent. The child is assigned infinite fitness.
