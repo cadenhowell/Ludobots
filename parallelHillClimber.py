@@ -1,6 +1,5 @@
 import copy
 import os
-import pickle
 
 import constants as c
 from solution import SOLUTION
@@ -8,10 +7,14 @@ from solution import SOLUTION
 import math
 class PARALLEL_HILL_CLIMBER:
 	def __init__(self):
-		os.system('rm brain*.nndf')
-		os.system('rm fitness*.txt')
-		os.system('rm best_fitness.csv')
-		os.system('rm body*.txt')
+		if os.path.exists('brain*.nndf'):
+			os.system('rm brain*.nndf')
+		if os.path.exists('body*.urdf'):
+			os.system('rm body*.urdf')
+		if os.path.exists('fitness*.txt'):
+			os.system('rm fitness*.txt')
+		if os.path.exists('best_fitness.csv'):
+			os.system('rm best_fitness.csv')
 		self.parents = {}
 		self.nextAvailableID = 0
 		for i in range(c.populationSize):
@@ -79,6 +82,7 @@ class PARALLEL_HILL_CLIMBER:
 			if bestParent is None or parent.fitness < bestParent.fitness:
 				bestParent = parent
 		bestParent.Start_Simulation('GUI', save=True)
+		bestParent.Wait_For_Simulation_To_End()
 
 	def Evaluate(self, solutions):
 		for solution in solutions.values():
