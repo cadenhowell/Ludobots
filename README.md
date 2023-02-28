@@ -9,7 +9,7 @@ This project was built on top of Ludobots and Pyrosim. See links below for furth
 ## Overview
 To generate a 3D morphology, I recursively branched out constituent boxes with varying probability. Unlike my 1D morphology, I chose not to use spheres and arbitrarily rotated cylinders. In 3D they lead to too many cases where the morphology would be hard to connect and control. I also used revolute joints to connect the boxes, which are much easier to control than other joint types. The brain is a fully connected network from the sensors to the joints. The number of links is random between 3 and 8. To evolve the morphology, one of several types of mutations can be chosen (see evolution section).
 
-[Link to video](https://youtu.be/Xvd_xRGgUSE)
+[Link to video](https://youtu.be/IM5jk6bThAw)
 
 ## Recursive Methodology for Initial Creation
 * For the dimension the box was branching out in, the box is between sizes 1.1 and 2.2. For the other two dimensions, the box is between sizes 0.2. and 0.4.
