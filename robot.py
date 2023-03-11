@@ -10,18 +10,16 @@ from sensor import SENSOR
 import math
 
 class ROBOT:
-    def __init__(self, solutionID, save=False):
+    def __init__(self, solutionID):
+        self.invalidFlag = False
         self.solutionID = solutionID
         self.robotId = p.loadURDF(f"body{self.solutionID}.urdf")
-        if not save:
-            os.system(f'rm body{self.solutionID}.urdf')
+        os.system(f'rm body{self.solutionID}.urdf')
         pyrosim.Prepare_To_Simulate(self.robotId)
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
         self.nn = NEURAL_NETWORK(f"brain{self.solutionID}.nndf")
-        print(save)
-        if not save:
-            os.system(f'rm brain{self.solutionID}.nndf')
+        os.system(f'rm brain{self.solutionID}.nndf')
 
     def Prepare_To_Sense(self):
         self.sensors = {}
@@ -47,12 +45,19 @@ class ROBOT:
     def Think(self):
         self.nn.Update()
 
-    def Get_Fitness(self):
+    def Get_Fitness(self, writeToFile=True):
         basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
         basePosition = basePositionAndOrientation[0]
         xPosition = math.inf if math.isnan(basePosition[0]) else basePosition[0]
-        
-        with open(f"tmp{self.solutionID}.txt", "w") as f:
-            f.write(str(xPosition))
-        os.system(f'mv tmp{self.solutionID}.txt fitness{self.solutionID}.txt')
+        zPosition = math.inf if math.isnan(basePosition[2]) else basePosition[2]
+        if zPosition >= c.invalidZPos:
+            self.invalidFlag = True
+
+        if writeToFile:
+            with open(f"tmp{self.solutionID}.txt", "w") as f:
+                if self.invalidFlag:
+                    f.write(f'{math.inf}')
+                else:
+                    f.write(f'{xPosition}')
+            os.system(f'mv tmp{self.solutionID}.txt fitness{self.solutionID}.txt')
         

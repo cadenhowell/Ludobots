@@ -4,7 +4,12 @@ from simulation import SIMULATION
 
 directOrGUI = sys.argv[1]
 solutionID = sys.argv[2]
-save = False if sys.argv[3] == "False" else True
-simulation = SIMULATION(directOrGUI, solutionID, save)
-simulation.Run()
-simulation.Get_Fitness()
+
+if len(sys.argv) > 5:
+    sleep = float(sys.argv[3])
+    simulation = SIMULATION(directOrGUI, solutionID, sleep)
+    simulation.Run()
+else:
+    simulation = SIMULATION(directOrGUI, solutionID)
+    simulation.Run()
+    simulation.Get_Fitness()

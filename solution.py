@@ -2,27 +2,34 @@ import os
 import random
 import time
 import math
+import pickle
 
 import pyrosim.pyrosim as pyrosim
 from morphology import Morphology
 
 
 class SOLUTION:
-    def __init__(self, nextAvailableID, seed=None):
+    def __init__(self, nextAvailableID, seed):
         self.myID = nextAvailableID
-        self.morphology = Morphology(seed)
+        self.seed = seed
+        self.morphology = Morphology(seed = seed)
         self.fitness = math.inf
 
-    def Start_Simulation(self, directOrGUI, save=False):
+    def Start_Simulation(self, directOrGUI, sleep=None):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
-        os.system(f"python3 simulate.py {directOrGUI} {self.myID} {save} 2&>1 &")
+
+        if sleep is None:
+            os.system(f"python3 simulate.py {directOrGUI} {self.myID} 2&>1 &")
+        else:
+            os.system(f"python3 simulate.py {directOrGUI} {self.myID} {sleep} 2&>1 &")
 
 
     def Wait_For_Simulation_To_End(self):
         while not os.path.exists(f"fitness{self.myID}.txt"):
             time.sleep(0.01)
+
         with open(f"fitness{self.myID}.txt", "r") as fitnessFile:
             self.fitness = float(fitnessFile.read())
 
@@ -66,7 +73,11 @@ class SOLUTION:
         pyrosim.End()
 
     def Mutate(self):
-        if random.random() < 0.5:
+        if random.random() < 0.7:
             self.morphology.Mutate_Brain()
         else:
             self.morphology.Mutate_Body()
+
+    def save(self, dir):
+        with open(f"{dir}/solution{self.myID}.pkl", "wb+") as f:
+            pickle.dump(self, f)

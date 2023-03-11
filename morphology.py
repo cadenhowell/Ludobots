@@ -26,7 +26,8 @@ class Cube:
 
 class Morphology:
 
-    def __init__(self, seed=None, side_len_range=(0.2, 2.2), num_links_range=(3, 8)):
+    def __init__(self, seed, side_len_range=(0.2, 2.2), num_links_range=(3, 9)):
+        self.seed = seed
         self.joints = []
         self.links = []
         self.sensors = []
@@ -35,12 +36,15 @@ class Morphology:
         self.min_side_len = side_len_range[0]
         self.max_side_len = side_len_range[1]
 
-        random.seed(seed)
-        np.random.seed(seed)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
 
         self.min_num_segments = num_links_range[0]
         self.max_num_segments = num_links_range[1]
-        self.initial_num_segments = random.randint(*num_links_range)
+        num_segments = np.random.normal(5, 2)
+        num_segments = np.clip(num_segments, self.min_num_segments, self.max_num_segments)
+        num_segments = np.round(num_segments)
+        self.initial_num_segments = int(num_segments)
 
         self.build_morphology()
 
@@ -174,7 +178,8 @@ class Morphology:
                 self.change_type(random_joint)
 
         elif to_change == 'link':
-            change_type = random.choice(['size', 'add', 'delete'])
+            operation_prob = [0.4, 0.2, 0.4]
+            change_type = random.choices(['size', 'add', 'delete'], weights=operation_prob)[0]
 
             if change_type == 'size':
                 random_link = random.choice(self.links)
