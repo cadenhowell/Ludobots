@@ -6,7 +6,7 @@ import constants as c
 
 parser = argparse.ArgumentParser(description='View a simulation')
 
-parser.add_argument('-c', '--compare', default=True, action='store_true', help='Compare the best solution to the original solution in the lineage')
+parser.add_argument('-c', '--compare', default=False, action='store_true', help='Compare the best solution to the original solution in the lineage')
 
 parser.add_argument('-r', '--run', default='best', type=str, help='The run number')
 parser.add_argument('-g', '--generation', default=c.numberOfGenerations, type=str, help='The generation number')
