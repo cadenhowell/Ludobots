@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description='View a simulation')
 parser.add_argument('-c', '--compare', default=False, action='store_true', help='Compare the best solution to the original solution in the lineage')
 
 parser.add_argument('-r', '--run', default='best', type=str, help='The run number')
-parser.add_argument('-g', '--generation', default=c.numberOfGenerations, type=str, help='The generation number')
+parser.add_argument('-g', '--generation', default=c.numberOfGenerations, type=int, help='The generation number')
 parser.add_argument('-s', '--solution', default='best', type=str, help='The solution ID')
 
 parser.add_argument('-t', '--sleep', default=0.002, type=float, help='The slowness of the simulation')
