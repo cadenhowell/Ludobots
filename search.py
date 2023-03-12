@@ -31,6 +31,12 @@ def main():
 
     best_fitness = math.inf
     best_run = 0
+    if os.path.exists('saved_morphs/best_run.txt'):
+        with open('saved_morphs/best_run.txt', 'r') as f:
+            best_run = int(f.read())
+        with open(f'saved_morphs/best_fitness.txt', 'r') as f:
+            best_fitness = float(f.read())
+
     for i in run_numbers:
         if os.path.exists(f'saved_morphs/{i}'):
             os.system(f'rm -r saved_morphs/{i}')
@@ -50,6 +56,9 @@ def main():
 
     with open('saved_morphs/best_run.txt', 'w+') as f:
         f.write(f'{best_run}')
+
+    with open('saved_morphs/best_fitness.txt', 'w+') as f:
+        f.write(f'{best_fitness}')
 
     clean_up()
 
