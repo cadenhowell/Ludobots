@@ -114,7 +114,7 @@ Minimize the position in the x direction. In the fitness plot, the abs value of 
 
 ### Fitness Curves
 <p align="center">
-    <img src="./imgs/final.png" width="700" height="500">
+    <img src="./imgs/Final.png" width="700" height="500">
 </p>
 
 ## Morphospace
