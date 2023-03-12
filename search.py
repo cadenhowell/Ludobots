@@ -11,7 +11,7 @@ def main():
 
     parser.add_argument('-s', '--seed', default=22, type=int, help='The random simulation seed')
     parser.add_argument('-r', '--runs', default='1-10', type=str, help='The run numbers to search')
-    parser.add_argument('--reset', action='store_true', help='Reset the saved morphs directory')
+    parser.add_argument('--reset', action='store_true',  default=False, help='Reset the saved morphs directory')
 
     args = parser.parse_args()
 
@@ -38,6 +38,7 @@ def main():
         print(f'\nRun {i}')
 
         os.system(f'mkdir saved_morphs/{i}')
+        
         phc = PARALLEL_HILL_CLIMBER(run_number = i, seed = args.seed ^ (i * 197299))
         phc.Evolve()
 
