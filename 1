@@ -1,0 +1,60 @@
+pybullet build time: Jan  9 2023 13:29:02
+1   HIToolbox                           0x00007ff819054726 _ZN15MenuBarInstance22EnsureAutoShowObserverEv + 102
+2   HIToolbox                           0x00007ff8190542b8 _ZN15MenuBarInstance14EnableAutoShowEv + 52
+3   HIToolbox                           0x00007ff818ff8908 SetMenuBarObscured + 408
+4   HIToolbox                           0x00007ff818ff84ca _ZN13HIApplication15HandleActivatedEP14OpaqueEventRefhP15OpaqueWindowPtrh + 164
+5   HIToolbox                           0x00007ff818ff2996 _ZN13HIApplication13EventObserverEjP14OpaqueEventRefPv + 252
+6   HIToolbox                           0x00007ff818fbabd2 _NotifyEventLoopObservers + 153
+7   HIToolbox                           0x00007ff818ff23e6 AcquireEventFromQueue + 494
+8   HIToolbox                           0x00007ff818fe13ec ReceiveNextEventCommon + 285
+9   HIToolbox                           0x00007ff818fe12b3 _BlockUntilNextEventMatchingListInModeWithFilter + 70
+10  AppKit                              0x00007ff8127e42f3 _DPSNextEvent + 909
+11  AppKit                              0x00007ff8127e3174 -[NSApplication(NSEvent) _nextEventMatchingEventMask:untilDate:inMode:dequeue:] + 1219
+12  pybullet.cpython-310-darwin.so      0x0000000109b98c99 Mac_updateWindow + 409
+13  pybullet.cpython-310-darwin.so      0x0000000109b2cd86 _ZN20OpenGLExampleBrowser6updateEf + 1526
+14  pybullet.cpython-310-darwin.so      0x0000000109c74576 _ZN44InProcessPhysicsClientSharedMemoryMainThread19processServerStatusEv + 70
+15  pybullet.cpython-310-darwin.so      0x0000000109bb93af b3SubmitClientCommandAndWaitStatus + 223
+16  pybullet.cpython-310-darwin.so      0x0000000109d80285 pybullet_connectPhysicsServer + 885
+17  Python                              0x0000000108e05eef cfunction_call + 52
+18  Python                              0x0000000108db79db _PyObject_MakeTpCall + 132
+19  Python                              0x0000000108eb2a52 call_function + 292
+20  Python                              0x0000000108eab132 _PyEval_EvalFrameDefault + 30955
+21  Python                              0x0000000108ea2576 _PyEval_Vector + 313
+22  Python                              0x0000000108db7bff _PyObject_FastCallDictTstate + 87
+23  Python                              0x0000000108e28b22 slot_tp_init + 200
+24  Python                              0x0000000108e20d2b type_call + 275
+25  Python                              0x0000000108db79db _PyObject_MakeTpCall + 132
+26  Python                              0x0000000108eb2a52 call_function + 292
+27  Python                              0x0000000108ea8fc7 _PyEval_EvalFrameDefault + 22400
+28  Python                              0x0000000108ea2576 _PyEval_Vector + 313
+29  Python                              0x0000000108ea242c PyEval_EvalCode + 112
+30  Python                              0x0000000108f00a08 run_eval_code_obj + 72
+31  Python                              0x0000000108f0098e run_mod + 96
+32  Python                              0x0000000108f00658 pyrun_file + 133
+33  Python                              0x0000000108f00079 _PyRun_SimpleFileObject + 275
+34  Python                              0x0000000108eff6e5 _PyRun_AnyFileObject + 155
+35  Python                              0x0000000108f2159c pymain_run_file_obj + 234
+36  Python                              0x0000000108f20d5b pymain_run_file + 85
+37  Python                              0x0000000108f206f1 Py_RunMain + 984
+38  Python                              0x0000000108f21705 pymain_main + 35
+39  Python                              0x0000000108f219d0 Py_BytesMain + 42
+40  dyld                                0x00007ff80f287310 start + 2432
+Version = 4.1 ATI-4.9.51
+Vendor = ATI Technologies Inc.
+Renderer = AMD Radeon Pro 555X OpenGL Engine
+b3Printf: Selected demo: Physics Server
+startThreads creating 1 threads.
+starting thread 0
+started thread 0 
+MotionThreadFunc thread started
+b3Printf: b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+
+b3Printf: expected a world element, continuing without it.
+numActiveThreads = 0
+stopping threads
+Thread with taskId 0 exiting
+Thread TERMINATED
+destroy semaphore
+semaphore destroyed
+destroy main semaphore
+main semaphore destroyed
