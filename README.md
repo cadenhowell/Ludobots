@@ -1,11 +1,6 @@
-# Evolving 3D Morphologies ([Link to video](https://youtu.be/H5rHEVx5wYA))
-Created for CS 396 - Artificial Life at Northwestern University
-
-This project was built on top of Ludobots and Pyrosim. See links below for further details.
-
-[r/ludobots](https://www.reddit.com/r/ludobots/)
-
-[Pyrosim](https://github.com/ccappelle/pyrosim)
+[![Teaser](./imgs/Final.gif)](https://youtu.be/H5rHEVx5wYA)
+# Evolving 3D Morphologies
+[See full video](https://youtu.be/H5rHEVx5wYA)
 ## Overview
 To generate a 3D morphology, I recursively branched out constituent boxes with varying probability. Unlike my 1D morphology, I chose not to use spheres and arbitrarily rotated cylinders. In 3D they lead to too many cases where the morphology would be hard to connect and control. I also used revolute joints to connect the boxes, which are much easier to control than other joint types. The brain is a fully connected network from the sensors to the joints. The number of links is random normal between 3 and 9 (mean = 5, std = 2). To evolve the morphology, one of several types of mutations can be chosen (see evolution section).
 
@@ -206,3 +201,12 @@ Finally, the
     --seed <seed>
 
 flag allows you to set the seed for the random number generator. This is useful for reproducing results. By default, the seed is 22 and all results produced in a specific run are deterministic.
+
+## Citations 
+Created for CS 396 - Artificial Life at Northwestern University
+
+This project was built on top of Ludobots and Pyrosim. See links below for further details.
+
+[r/ludobots](https://www.reddit.com/r/ludobots/)
+
+[Pyrosim](https://github.com/ccappelle/pyrosim)
