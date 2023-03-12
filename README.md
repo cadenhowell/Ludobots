@@ -1,4 +1,4 @@
-# Evolving 3D Morphologies
+# Evolving 3D Morphologies ([Link to video](https://youtu.be/H5rHEVx5wYA))
 Created for CS 396 - Artificial Life at Northwestern University
 
 This project was built on top of Ludobots and Pyrosim. See links below for further details.
@@ -9,7 +9,29 @@ This project was built on top of Ludobots and Pyrosim. See links below for furth
 ## Overview
 To generate a 3D morphology, I recursively branched out constituent boxes with varying probability. Unlike my 1D morphology, I chose not to use spheres and arbitrarily rotated cylinders. In 3D they lead to too many cases where the morphology would be hard to connect and control. I also used revolute joints to connect the boxes, which are much easier to control than other joint types. The brain is a fully connected network from the sensors to the joints. The number of links is random normal between 3 and 9 (mean = 5, std = 2). To evolve the morphology, one of several types of mutations can be chosen (see evolution section).
 
-[Link to video](https://youtu.be/Xvd_xRGgUSE)
+## Explanation
+The majority of the fundamental logic is stored in morphology.py. There, the logic behind genotype generation, mutation, and storage is kept. Solution.py is a wrapper, almost, which can interpret a morphology object to send to pyrosim. Of other importance, parallelHillClimber.py controls the selection (see description below). 
+
+Solutions are found with search.py and viewed with view.py (see final section for instructions on how to use each; I made a nice interface for each).
+
+Observations
+* Smaller morphologies often perform better than larger one for the simple task of locomotion
+    * The slug like movement behavior is common, and reliable.
+    * The more moving parts that are added, the more that goes wrong.
+    * Most "best" solutions were 3 or 4 links, despite choosing from initial link size from  N(5, 2)
+        * Possible this is biased because I delete link with twice probability of adding link; though if deleting was worse it wouldn't replace parent
+* Large solutions which worked tended to move slowly
+
+* Enforcing height ceiling vital for limiting "glitch jumping" morphologies
+* Fitness plot shows most solutions similar in final fitness
+    * Solution 10, doubled the majority of other best fitnesses without any glitching (simple 3 link morphology)
+        *  We can impose bound and say the majority of solutions were less than half way to the optimal morphology after 500 generations
+    * Single change can lead to very rapid fitness growth. I hypothesis mutations that lead to a high fitness derivative are body morphology changes, but I leave this for future work.
+        * In contrast, gradual changes are possibly the result of brain mutations.
+
+Watch video (linked at top) to view evolution in action. You will see lineages evolve and behaviors change. Notice how despite the primordial soup being chaotic at times, solutions tend to be reduced in complexity. 
+
+You will see one case in the video where, after 100 generations, 0 locomotion was learned, as if the evolution was stuck. It turns out having a sensor is pretty important, and when morphologies lack one they don't attempt to move.
 
 ## Recursive Methodology for Initial Genotype Creation
 * For the dimension the box was branching out in, the box is between sizes 1.1 and 2.2. For the other two dimensions, the box is between sizes 0.2. and 0.4.
