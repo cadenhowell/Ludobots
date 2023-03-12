@@ -57,3 +57,6 @@ else:
     with open(f'saved_morphs/{run_number}/gen_{args.generation}/solution{solution}.pkl', 'rb') as f:
         loaded_solution = pickle.load(f)
         loaded_solution.Start_Simulation('GUI', sleep = args.sleep)
+        while not os.path.exists(f'fitness{solution}.txt'):
+            pass
+        os.system(f'rm fitness{solution}.txt')
